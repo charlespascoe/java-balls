@@ -1,0 +1,12 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'uk.co.cpascoe.balls.Program'
+
+jar {
+    baseName = 'java-balls'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'uk.co.cpascoe.balls.Program'
+    }
+}
