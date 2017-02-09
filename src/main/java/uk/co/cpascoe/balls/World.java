@@ -11,12 +11,16 @@ public class World {
     private BallFactory ballFactory;
     private Vector size;
     private Vector gravity;
-    private float age = 0;
     private float lastBallCreated = 0;
+    private float rotateGravityRate = 0;
+    private int maxBalls;
+    private boolean isDrawing = false;
 
-    public World(Vector size, Vector gravity) {
+    public World(Vector size, Vector gravity, float rotateGravityRate, int maxBalls) {
         this.size = size;
         this.gravity = gravity;
+        this.rotateGravityRate = rotateGravityRate;
+        this.maxBalls = maxBalls;
         this.ballFactory = new BallFactory(this);
     }
 
@@ -25,10 +29,11 @@ public class World {
     public Vector getGravity() { return this.gravity; }
 
     public void update(float timePassed) {
-        this.age += timePassed;
         this.drawingBalls = (List)this.balls.clone();
 
-        this.gravity = this.gravity.rotate((timePassed * 2 * (float)Math.PI) / 10);
+        if (this.rotateGravityRate > 0) {
+            this.gravity = this.gravity.rotate((timePassed * 2 * (float)Math.PI) / this.rotateGravityRate);
+        }
 
         Vector gravityForTick = this.gravity.multiply(timePassed);
 
@@ -40,9 +45,8 @@ public class World {
     }
 
     public void createBall(Vector position) {
-        if (this.age - this.lastBallCreated > 0.05) {
+        if (this.balls.size() < this.maxBalls) {
             this.balls.add(this.ballFactory.create(position));
-            this.lastBallCreated = this.age;
         }
     }
 
