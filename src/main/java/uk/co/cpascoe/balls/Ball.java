@@ -42,19 +42,15 @@ public class Ball {
         if (this.position.getX() < 0) {
             this.position.setX(0);
             this.velocity.setX(Math.abs(this.velocity.getX()) * this.bounce);
+        } else if (this.position.getX() + this.size.getX() > this.world.getSize().getX()) {
+            this.position.setX(this.world.getSize().getX() - this.size.getX());
+            this.velocity.setX(-Math.abs(this.velocity.getX()) * this.bounce);
         }
 
         if (this.position.getY() < 0) {
             this.position.setY(0);
             this.velocity.setY(Math.abs(this.velocity.getY()) * this.bounce);
-        }
-
-        if (this.position.getX() + this.size.getX() > this.world.getSize().getX()) {
-            this.position.setX(this.world.getSize().getX() - this.size.getX());
-            this.velocity.setX(-Math.abs(this.velocity.getX()) * this.bounce);
-        }
-
-        if (this.position.getY() + this.size.getY() > this.world.getSize().getY()) {
+        } else if (this.position.getY() + this.size.getY() > this.world.getSize().getY()) {
             this.position.setY(this.world.getSize().getY() - this.size.getY());
             this.velocity.setY(-Math.abs(this.velocity.getY()) * this.bounce);
         }
