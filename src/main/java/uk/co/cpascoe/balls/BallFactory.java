@@ -5,25 +5,27 @@ import java.awt.Color;
 
 public class BallFactory {
     private World world;
-    private float minSize;
-    private float maxSize;
     private float maxVelMag;
+    private RandomRange size;
+    private RandomRange bounce;
+    private RandomRange maxAge;
     private Random random;
 
     public BallFactory(World world) {
-        this(world, 10, 100, 500);
+        this(world, new RandomRange(10, 100), new RandomRange(0.6f, 1.01f), new RandomRange(10, 15), 750);
     }
 
-    public BallFactory(World world, float minSize, float maxSize, float maxVelMag) {
+    public BallFactory(World world, RandomRange size, RandomRange bounce, RandomRange maxAge, float maxVelMag) {
         this.world = world;
-        this.minSize = minSize;
-        this.maxSize = maxSize;
+        this.size = size;
+        this.bounce = bounce;
+        this.maxAge = maxAge;
         this.maxVelMag = maxVelMag;
-        this.random = new Random();
+        this.random = new Random(System.currentTimeMillis());
     }
 
     private Vector randomSize() {
-        float size = this.random.nextFloat() * (this.maxSize - this.minSize) + this.minSize;
+        float size = this.size.nextValue();
         return new Vector(size, size);
     }
 
@@ -55,10 +57,11 @@ public class BallFactory {
         return new Ball(
             this.world,
             this.randomColour(),
-            this.random.nextFloat() * 0.5f + 0.5001f,
+            this.bounce.nextValue(),
             this.randomSize(),
             position,
-            this.randomVelocity()
+            this.randomVelocity(),
+            this.maxAge.nextValue()
         );
     }
 }
