@@ -35,7 +35,7 @@ public class World {
         for (int i = this.balls.size() - 1; i >= 0; i--) {
             Ball ball = this.balls.get(i);
             ball.update(timePassed, gravityForTick);
-            if (ball.getAge() > 10) this.balls.remove(i);
+            if (ball.getTimeToLive() <= 0) this.balls.remove(i);
         }
     }
 

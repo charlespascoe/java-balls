@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 
 public class Ball {
-    private float age = 0;
+    private float timeToLive;
     private Color color;
     private Vector size;
     private Vector position;
@@ -13,26 +13,27 @@ public class Ball {
     private World world;
     private float bounce;
 
-    public Ball(World world, Color color, float bounce, Vector size, Vector centerPosition, Vector velocity) {
+    public Ball(World world, Color color, float bounce, Vector size, Vector centerPosition, Vector velocity, float timeToLive) {
         this.world = world;
         this.color = color;
         this.bounce = bounce;
         this.size = size;
         this.position = new Vector(centerPosition.getX() - size.getX() * 0.5f, centerPosition.getY() - size.getY() * 0.5f);
         this.velocity = velocity;
+        this.timeToLive = timeToLive;
     }
 
-    public float getAge() { return this.age; }
+    public float getTimeToLive() { return this.timeToLive; }
 
     public void update(float timePassed, Vector gravity) {
-        this.age += timePassed;
+        this.timeToLive -= timePassed;
 
-        if (this.age > 9 && this.age < 10) {
+        if (this.timeToLive < 1 && this.timeToLive > 0) {
             this.color = new Color(
                 this.color.getRed(),
                 this.color.getGreen(),
                 this.color.getBlue(),
-                (int)(255 * (10 - this.age))
+                (int)(255 * this.timeToLive)
             );
         }
 
