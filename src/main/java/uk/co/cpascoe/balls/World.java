@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class World {
-    private List<Ball> balls = new ArrayList<>();
+    private ArrayList<Ball> balls = new ArrayList<>();
+    private List<Ball> drawingBalls;
     private BallFactory ballFactory;
     private Vector size;
     private Vector gravity;
@@ -25,6 +26,7 @@ public class World {
 
     public void update(float timePassed) {
         this.age += timePassed;
+        this.drawingBalls = (List)this.balls.clone();
 
         this.gravity = this.gravity.rotate((timePassed * 2 * (float)Math.PI) / 10);
 
@@ -45,7 +47,7 @@ public class World {
     }
 
     public void draw(Graphics2D graphics) {
-        for (Ball ball : this.balls) {
+        for (Ball ball : this.drawingBalls) {
             ball.draw(graphics);
         }
     }
