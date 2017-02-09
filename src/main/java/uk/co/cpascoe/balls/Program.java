@@ -13,10 +13,13 @@ import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.lang.Thread;
 
 public class Program {
 	public static class Surface extends JPanel {
         private World world;
+
+        private final float TIME_BETWEEN_FRAMES = 0.02f;
 
         public World getWorld() { return this.world; }
 
@@ -25,19 +28,30 @@ public class Program {
 
             this.setPreferredSize(new Dimension((int)worldSize.getX(), (int)worldSize.getY()));
 
-            this.world = new World(worldSize, new Vector(500, 500));
+            this.world = new World(worldSize, new Vector(500, 500), 10, 100);
 
-            Timer t = new Timer(16, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    world.update(16f/1000);
-                    repaint();
+            long frameMillis = (long)(TIME_BETWEEN_FRAMES * 1000);
+
+            Thread t = new Thread() {
+                public void run() {
+                    long lastFrame = 0;
+                    try {
+                        while (true) {
+                            if (lastFrame < frameMillis) {
+                                Thread.sleep(frameMillis - lastFrame);
+                            }
+
+                            long start = System.currentTimeMillis();
+                            world.update(TIME_BETWEEN_FRAMES);
+                            lastFrame = System.currentTimeMillis() - start;
+                            repaint();
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            });
+            };
 
-            t.setInitialDelay(50);
-
-            t.setRepeats(true);
             t.start();
 
             this.addMouseMotionListener(new MouseMotionListener() {
